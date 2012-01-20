@@ -2,8 +2,6 @@ function ApplicationWindow() {
 	//load dependencies
 	var TodoFormView = require('ui/TodoFormView'), TodoTableView = require('ui/TodoTableView'), network = require('services/network'), datastore = require('services/datastore');
 
-	datastore.login();
-
 	//create object instance
 	var self = Ti.UI.createWindow({
 		backgroundColor : 'white',
@@ -23,15 +21,35 @@ function ApplicationWindow() {
 	todoForm.addEventListener('todoSaved', function() {
 		todoList.fireEvent('todosUpdated');
 	});
-	//bootstrap the datastore, if necessary
-	if(!Ti.App.Properties.hasProperty('seeded')) {
-		network.getList(function(todos) {
-			for(var i = 0, l = todos.length; i < l; i++) {
-				datastore.saveTodo(todos[i]);
+	var saved = null; //Ti.App.Properties.getString('credentials');
+	if(saved) {
+		network.login(null, function(resp) {
+			if(resp.success === false) {
+				Ti.App.Properties.removeProperty('credentials');
+
+				// @TODO - refactor
+				var window, LoginWindow = require('ui/LoginWindow');
+				window = new LoginWindow();
+
+				//add behavior
+				window.addEventListener('loggedIn', function() {
+					todoList.fireEvent('todosUpdated');
+				});
+
+				window.open();
+			} else {
+				todoList.fireEvent('todosUpdated');
 			}
-			todoList.fireEvent('todosUpdated');
-			Ti.App.Properties.setBool('seeded', true);
 		});
+	} else {
+		var window, LoginWindow = require('ui/LoginWindow');
+		window = new LoginWindow();
+
+		//add behavior
+		window.addEventListener('loggedIn', function() {
+			todoList.fireEvent('todosUpdated');
+		});
+		window.open();
 	}
 
 	//return instance from constructor

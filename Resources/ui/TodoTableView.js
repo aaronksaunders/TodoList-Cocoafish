@@ -43,8 +43,6 @@ function TodoTableView() {
 	//reload data when we're told that it has changed
 	self.addEventListener('todosUpdated', loadData);
 
-	//initialize and return instance from constructor
-	loadData();
 	return self;
 }
 
