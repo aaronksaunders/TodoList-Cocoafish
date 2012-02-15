@@ -4,14 +4,16 @@ var Todo = require('model/Todo');
 //bootstrap datastore
 var saved = Ti.App.Properties.getString('db');
 var datastore = (saved) ? JSON.parse(saved) : [];
-var COCOAFISH_APPLICATION_KEY = "9c7OpOUMIaChxK8P5sSBIc51CzN9y5Bo";
+
+// meetup_todo_app
+var COCOAFISH_APPLICATION_KEY = "EIjz2PeX3jFH7LfO06a8eaIw4UROy524";
 
 exports.login = function() {
 	doAPICall({
 		"method" : "POST",
 		"call" : "https://api.cocoafish.com/v1/users/login.json",
 		"params" : {
-			"login" : "aaron@clearlyinnovative.com",
+			"login" : "mike@cocoafish.com",
 			"password" : "password"
 		}
 	}, function(resp) {

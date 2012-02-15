@@ -17,5 +17,5 @@ exports.getList = function(callback) {
 		callback.call(this,todos);
 	};
 	xhr.open('GET','http://titaniumtodos.appspot.com/todos');
-	xhr.send();
+	//xhr.send();
 };
